@@ -4,6 +4,11 @@ on:
   push:
     branches:
       - main
+  pull_request:
+    branches:
+      - main
+    types:
+      - closed
 
 jobs:
   simple_deployment_pipeline:
@@ -21,3 +26,22 @@ jobs:
         run: npm run build
       - name: test
         run: npm run test
+
+  tag_release:
+    needs: [simple_deployment_pipeline]
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.merge_commit_sha }}
+          fetch-depth: '0'
+
+      - name: Bump version and push tag
+        uses: anothrNick/github-tag-action@1.75.0
+        env:
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+          DEFAULT_BUMP: patch
+          NONE_STRING_TOKEN: skip
+          TAG_PREFIX: v
+          
