@@ -39,3 +39,25 @@ jobs:
       - name: Deploy
         if: github.event.pull_request.merged == true
         run: curl https://api.render.com/deploy/srv-${{ secrets.RENDER_SERVICE_ID }}?key=${{ secrets.RENDER_API_KEY }}
+
+      - name: Discord notification success
+        if: ${{ success() }}
+        uses: rjstone/discord-webhook-notify@v2
+        with:
+          webhookUrl: ${{secrets.DISCORD_WEBHOOK}}
+          username: FullStackOpen-Pokedex
+          text: A new version of Pokedex deployed
+          severity: info
+          details: "View at: https://full-stack-open-pokedex-ojxy.onrender.com"
+
+      - name: Discord notification build fail
+        if: ${{ failure() }}
+        uses: rjstone/discord-webhook-notify@v2
+        with:
+          webhookUrl: ${{secrets.DISCORD_WEBHOOK}}
+          username: FullStackOpen-Pokedex
+          text: Build fail
+          severity: error
+          details: "Commit ${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }} by ${{ github.actor }} broke the build."
+
+
