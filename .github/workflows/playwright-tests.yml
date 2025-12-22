@@ -42,9 +42,9 @@ jobs:
 
       - name: Discord notification success
         if: ${{ success() }}
-        uses: rjstone/discord-webhook-notify@v2
+        uses: rjstone/discord-webhook-notify@v2.2.1
         with:
-          webhookUrl: ${{secrets.DISCORD_WEBHOOK}}
+          webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
           username: FullStackOpen-Pokedex
           text: A new version of Pokedex deployed
           severity: info
@@ -52,7 +52,7 @@ jobs:
 
       - name: Discord notification build fail
         if: ${{ failure() }}
-        uses: rjstone/discord-webhook-notify@v2
+        uses: rjstone/discord-webhook-notify@v2.2.1
         with:
           webhookUrl: ${{secrets.DISCORD_WEBHOOK}}
           username: FullStackOpen-Pokedex
